@@ -221,8 +221,8 @@ class ApplicationState extends ChangeNotifier{
             print("We got new data from Firebase ${document.data()}");
             _guestBookMessages.add(
               GuestBookMessage(
-                name: document.data()['name'],
-                message: document.data()['text'],
+                name: document.data()['name'] as String,
+                message: document.data()['text'] as String,
               ),
             );
           });
@@ -235,7 +235,7 @@ class ApplicationState extends ChangeNotifier{
             .snapshots()
             .listen((snapshot) {
           if (snapshot.data() != null) {
-            if (snapshot.data()!['attending']) {
+            if (snapshot.data()! ['attending']) {
               _attending = Attending.yes;
             } else {
               _attending = Attending.no;
@@ -279,9 +279,9 @@ class ApplicationState extends ChangeNotifier{
         .collection('attendees')
         .doc(FirebaseAuth.instance.currentUser!.uid);
     if (attending == Attending.yes) {
-      userDoc.set({'attending': true});
+      userDoc.set(<String, bool>{'attending': true});
     } else {
-      userDoc.set({'attending': false});
+      userDoc.set(<String, bool>{'attending': false});
     }
   }
 
@@ -292,7 +292,7 @@ class ApplicationState extends ChangeNotifier{
       throw Exception('Must be logged in');
     }
 
-    return FirebaseFirestore.instance.collection('guestbook').add({
+    return FirebaseFirestore.instance.collection('guestbook').add(<String, dynamic>{
       'text': message,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'name': FirebaseAuth.instance.currentUser!.displayName,
